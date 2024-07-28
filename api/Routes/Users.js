@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
   const sql = 'SELECT * FROM users WHERE username = ?';
   db.query(sql, [username], async (err, results) => {
     if (err) {
-      return res.status(201).send('Error fetching user');
+      return res.status(201).send(err);
     }
 
     if (results.length === 0) {
