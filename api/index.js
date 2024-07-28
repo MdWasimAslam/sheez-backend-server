@@ -6,6 +6,9 @@ app.get('/', (req, res) => {
     }
 );
 
+app.use('/users', require('./Routes/Users.js'));
+
+
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
     }
