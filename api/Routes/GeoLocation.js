@@ -53,7 +53,7 @@ router.post('/distance', async (req, res) => {
     db.query(sql, [coupleId], (err, results) => {
         if (err) {
             console.log(err);
-            return res.status(500).send('Error fetching locations');
+            return res.status(500).send(err);
         }
 
         if (results.length < 2) {
@@ -72,8 +72,8 @@ router.post('/distance', async (req, res) => {
                 });
             })
             .catch((err) => {
-                console.log(err);
-                res.status(500).send('Error fetching directions');
+                
+                res.status(500).send(err);
             });
     });
 });
