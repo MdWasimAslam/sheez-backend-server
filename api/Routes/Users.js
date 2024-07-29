@@ -50,11 +50,11 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.id }, secretKey, { expiresIn: '1h' });
-
+    console.log(user)
     let payload = {
       userId: user.id,
       username: user.username,
-      coupleId: user.coupleId,
+      coupleId: user.coupleid,
       token: token
     };
 
