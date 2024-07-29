@@ -1,20 +1,11 @@
-// db.js
-
-const mysql = require('mysql2');
-
-const db = mysql.createConnection({
-  host: 'sql12.freemysqlhosting.net',
-  user: 'sql12721417',
-  password: 'iJbEgRP8sV',
-  database: 'sql12721417'
-});
-
-db.connect((err) => {
+// Database/db.js
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./database.db', (err) => {
   if (err) {
-    console.error('Error connecting to the database:', err.stack);
-    return;
+    console.error('Error opening database:', err.message);
+  } else {
+    console.log('Connected to the SQLite database.');
   }
-  console.log('Connected to the database as id ' + db.threadId);
 });
 
 module.exports = db;
