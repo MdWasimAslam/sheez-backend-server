@@ -66,7 +66,8 @@ router.post('/update', async (req, res) => {
 
             res.status(200).send({
                 message: 'Location updated successfully',
-                distance: data.routes[0].legs[0].readable_distance
+                distance: data.routes[0].legs[0].readable_distance,
+                lastUpdated: getCurrDateTime.data.datetime
             });
         }
     } catch (err) {
