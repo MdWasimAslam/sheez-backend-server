@@ -1,11 +1,9 @@
-// Database/db.js
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./database.db', (err) => {
-  if (err) {
-    console.error('Error opening database:', err.message);
-  } else {
-    console.log('Connected to the SQLite database.');
-  }
+
+const { createPool } = require('@vercel/postgres');
+
+const postgresPool = createPool({
+  connectionString: 'postgres://default:itW7NXxuM8Ae@ep-restless-waterfall-a4fiyt3h-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"',
 });
 
-module.exports = db;
+
+module.exports = postgresPool;

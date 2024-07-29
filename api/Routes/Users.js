@@ -3,17 +3,14 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../Database/db.js');
+const pool = require('../Database/db.js');
 
 const router = express.Router();
 const saltRounds = 10;
 const secretKey = 'supersecrettokenkey'; // Replace with your secret key
 
 // Register a new user
-// Register a new user
 router.post('/register', async (req, res) => {
-  console.log('Request body:', req.body); // Log request body
-
   const { username, password, coupleId } = req.body;
 
   try {
@@ -21,32 +18,26 @@ router.post('/register', async (req, res) => {
 
     const sql = `
       INSERT INTO users (username, password, coupleId)
-      VALUES (?, ?, ?)
+      VALUES ($1, $2, $3)
     `;
 
-    db.run(sql, [username, hashedPassword, coupleId], function (err) {
-      if (err) {
-        console.error('Error inserting new user:', err.message);
-        return res.status(500).send('Error registering new user');
-      }
-      res.status(200).send('User registered successfully');
-    });
+    await pool.query(sql, [username, hashedPassword, coupleId]);
+
+    res.status(200).send('User registered successfully');
   } catch (err) {
-    console.error('Error hashing password:', err.message);
-    res.status(500).send('Error processing request');
+    console.error('Error registering new user:', err.message);
+    res.status(500).send('Error registering new user');
   }
 });
 
-
 // Login an existing user
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  const sql = 'SELECT * FROM users WHERE username = ?';
-  db.get(sql, [username], async (err, user) => {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
+  const sql = 'SELECT * FROM users WHERE username = $1';
+  try {
+    const result = await pool.query(sql, [username]);
+    const user = result.rows[0];
 
     if (!user) {
       return res.status(404).send('User not found');
@@ -65,9 +56,13 @@ router.post('/login', (req, res) => {
       username: user.username,
       coupleId: user.coupleId,
       token: token
-    }
+    };
+
     res.status(200).json(payload);
-  });
+  } catch (err) {
+    console.error('Error logging in user:', err.message);
+    res.status(500).send('Error logging in user');
+  }
 });
 
 module.exports = router;
