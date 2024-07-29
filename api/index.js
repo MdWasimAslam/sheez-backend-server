@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 // Routes for the API
 app.use('/users', require('./Routes/Users.js'));
-app.use('/geo', require('./Routes/GeoLocation.js'));
+app.use('/location', require('./Routes/GeoLocation.js'));
 app.use('/cart', Cart);
 
 // Start the server
