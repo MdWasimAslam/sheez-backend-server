@@ -1,7 +1,3 @@
-// routes/users.js
-//import dotenv
-require('dotenv').config();
-
 const {sql } = require('@vercel/postgres');
 const express = require('express');
 const router = express.Router();
