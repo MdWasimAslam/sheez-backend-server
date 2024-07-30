@@ -40,13 +40,22 @@ router.post('/update', async (req, res) => {
             `;
             await pool.query(sql, [latitude, longitude, coupleId, user_Id, getCurrDateTime.data.datetime]);
 
-            const sql2 = `
-            SELECT l1.latitude AS latitude_1, l1.longitude AS longitude_1,
-            l2.latitude AS latitude_2, l2.longitude AS longitude_2
-            FROM userslocation l1
-            JOIN userslocation l2
-            ON l1.coupleid = l2.coupleid
-            WHERE l1.user_id <> l2.user_id
+          const sql2 = `
+            SELECT 
+            l1.latitude AS latitude_1, 
+            l1.longitude AS longitude_1,
+            l1.updatedAt AS updatedAt_1,
+            l2.latitude AS latitude_2, 
+            l2.longitude AS longitude_2,
+            l2.updatedAt AS updatedAt_2
+            FROM 
+                userslocation l1
+            JOIN 
+                userslocation l2
+            ON 
+                l1.coupleid = l2.coupleid
+            WHERE 
+                l1.user_id <> l2.user_id
             LIMIT 1;
             `;
 
@@ -63,11 +72,13 @@ router.post('/update', async (req, res) => {
             console.log(data.routes[0].legs[0].readable_distance);
 
 
-
+             
+            const updatedAtData = user_Id == 1 ? rows[0].updatedat_2 : rows[0].updatedat_1;
+          
             res.status(200).send({
                 message: 'Location updated successfully',
                 distance: data.routes[0].legs[0].readable_distance,
-                lastUpdated: getCurrDateTime.data.datetime
+                lastUpdated: updatedAtData
             });
         }
     } catch (err) {
